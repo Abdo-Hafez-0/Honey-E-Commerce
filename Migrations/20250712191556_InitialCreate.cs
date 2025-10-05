@@ -43,7 +43,7 @@ namespace Honey_E_commerce.Migrations
                 columns: table => new
                 {
                     ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CustomerName = table.Column<Guid>(type: "uniqueidentifier", maxLength: 100, nullable: false),
+                    CustomerName = table.Column<Guid>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Address = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
                 },

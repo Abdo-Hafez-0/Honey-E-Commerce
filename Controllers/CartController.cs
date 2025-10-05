@@ -87,7 +87,7 @@ namespace Honey_E_commerce.Controllers
             return cartItems;
         }
 
-        private void SaveCartToSession(Dictionary<Guid, int> cartItems)
+        public void SaveCartToSession(Dictionary<Guid, int> cartItems)
         {
             // Handle empty cart case
             if (cartItems == null || cartItems.Count == 0)

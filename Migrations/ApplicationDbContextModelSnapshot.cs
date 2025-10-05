@@ -74,9 +74,10 @@ namespace Honey_E_commerce.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<Guid>("CustomerName")
-                        .HasMaxLength(100)
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("CustomerName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()

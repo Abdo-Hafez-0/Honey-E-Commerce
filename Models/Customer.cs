@@ -8,8 +8,8 @@ namespace Honey_E_commerce.Models
         public Guid ID { get; set; }
 
         [Required]
-        [MaxLength(100)]
-        public Guid CustomerName { get; set; }
+        [StringLength(200)]
+        public string CustomerName { get; set; }
 
         [Required]
         [Phone]

@@ -1,5 +1,6 @@
 ﻿using Honey_E_commerce.Data;
 using Honey_E_commerce.Models;
+using Honey_E_commerce.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Honey_E_commerce.Controllers
@@ -27,6 +28,52 @@ namespace Honey_E_commerce.Controllers
             ViewBag.total = subtotal;
 
             return View("Order", prdDic);
+        }
+
+        public IActionResult Test(string fname)
+        {
+            return Content($"{fname}");
+        }
+        public IActionResult SubmitOrder(OrderDetails orderDetails)
+        {
+            var customerData = new Customer
+            {
+                ID = Guid.NewGuid(),
+                CustomerName = orderDetails.FirstName + orderDetails.LastName,
+                Address = orderDetails.Address + orderDetails.City + orderDetails.State,
+                PhoneNumber = orderDetails.PhoneNumber
+            };
+
+            context.Customers.Add(customerData);
+
+            context.SaveChanges();
+
+            var products = GetCartFromSession();
+
+            foreach (var item in products)
+            {
+                var prd = context.Products.Single(x => x.ProductID == item.Key);
+                var orderData = new Order
+                {
+                    OrderID = Guid.NewGuid(),
+                    CustomerID = customerData.ID,
+                    ProductID = item.Key,
+                    Quantity = item.Value,
+                    UnitPrice = (double)prd.Price
+                };
+                context.Orders.Add(orderData);
+            }
+
+            context.SaveChanges();
+
+            HttpContext.Session.Remove("CartItems");
+
+            return RedirectToAction("Confirmation");
+        }
+
+        public IActionResult Confirmation()
+        {
+            return View();
         }
         private Dictionary<Guid, int> GetCartFromSession()
         {
