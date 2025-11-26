@@ -36,17 +36,28 @@ namespace Honey_E_commerce.Controllers
         }
         public IActionResult SubmitOrder(OrderDetails orderDetails)
         {
-            var customerData = new Customer
+
+            var user = context.Customers.FirstOrDefault(c => c.PhoneNumber == orderDetails.PhoneNumber);
+
+            Guid ID = user.ID;
+
+            if(user == null)
             {
-                ID = Guid.NewGuid(),
-                CustomerName = orderDetails.FirstName + orderDetails.LastName,
-                Address = orderDetails.Address + orderDetails.City + orderDetails.State,
-                PhoneNumber = orderDetails.PhoneNumber
-            };
+                var customerData = new Customer
+                {
+                    ID = Guid.NewGuid(),
+                    CustomerName = orderDetails.FirstName + orderDetails.LastName,
+                    Address = orderDetails.Address + orderDetails.City + orderDetails.State,
+                    PhoneNumber = orderDetails.PhoneNumber
+                };
 
-            context.Customers.Add(customerData);
+                ID = customerData.ID;
 
-            context.SaveChanges();
+                context.Customers.Add(customerData);
+                context.SaveChanges();
+            }
+
+
 
             var products = GetCartFromSession();
 
@@ -56,7 +67,7 @@ namespace Honey_E_commerce.Controllers
                 var orderData = new Order
                 {
                     OrderID = Guid.NewGuid(),
-                    CustomerID = customerData.ID,
+                    CustomerID = ID,
                     ProductID = item.Key,
                     Quantity = item.Value,
                     UnitPrice = (double)prd.Price
